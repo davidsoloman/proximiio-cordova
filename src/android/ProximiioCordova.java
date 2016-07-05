@@ -177,7 +177,7 @@ public class ProximiioCordova extends CordovaPlugin implements OnRequestPermissi
             if (registered) {
               webView.loadUrl("javascript:proximiio.lostBeacon(" + beacon.getInput().getJSON() + ")");
             } else {
-              webView.loadUrl("javascript:proximiio.lostBeacon({\"name\": \"Unknown Beacon\", \"accuracy\": "+ beacon.getAccuracy() + ",\"uuid\": \"" + beacon.getUUID() +"\", \"major\": " + beacon.getMajor() + ", \"minor\": " + beacon.getMinor() + ", \"namespace\": \"" + beacon.getNamespace() + "\"instance\": \"" + beacon.getInstanceID() + "\"})");
+              webView.loadUrl("javascript:proximiio.lostBeacon({\"name\": \"Unknown Beacon\", \"accuracy\": "+ beacon.getAccuracy() + ",\"uuid\": \"" + beacon.getUUID() +"\", \"major\": " + beacon.getMajor() + ", \"minor\": " + beacon.getMinor() + ", \"namespace\": \"" + beacon.getNamespace() + "\", \"instance\": \"" + beacon.getInstanceID() + "\"})");
             }
           }
         });
