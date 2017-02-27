@@ -20,20 +20,23 @@ ionic plugin add https://github.com/proximiio/proximiio-cordova.git
 
 ```
     onDeviceReady: function() {
-        proximiio.setIDandAuthToken("YOUR_APP_ID", "YOUR_TOKEN", null, null);
-        proximiio.setDebugOutput(true, null, null);
-        proximiio.setOutputTriggerCallback(function (output, input) {
-            if(output.type != "XHTML")
-                return;
-            // your code here
+        console.log('onDeviceReady');
+        proximiio.setToken(PROXIMIIO_TOKEN);
+        //proximiio.setDebugOutput(true, null, null);
+
+        proximiio.setOutputTriggerCallback(function (output) {
+          // Your code here
         });
-        proximiio.setInputTriggerCallback(function(input, entered) {
-            if(entered == false)
-                return;
-            // your code here
+
+        proximiio.setInputTriggerCallback(function(enter, geofence) {
+          // Your code here
         });
+
         proximiio.setPositionChangeCallback(function(coords) {
-            // your code here
+          // Your code here, for example:
+          //document.getElementById("position-latitude").innerHTML = coords.coordinates.lat;
+          //document.getElementById("position-longitude").innerHTML = coords.coordinates.lon;
+          //document.getElementById("position-accuracy").innerHTML = coords.accuracy;
         });
     },
 ```
@@ -53,10 +56,4 @@ in that case edit platforms/android/AndroidManifest.xml and replace
     <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="22" />
 with
     <uses-sdk android:minSdkVersion="18" android:targetSdkVersion="22" />
-```
-
-Also make sure the app has multidex enabled, 
-
-```
-    <application android:name="android.support.multidex.MultiDexApplication" ... >...</application>
 ```

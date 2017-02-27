@@ -3,11 +3,15 @@
 var inputTriggerCallback    = null;
 var outputTriggerCallback   = null;
 var positionChangeCallback  = null;
+var floorChangedCallback    = null;
 var errorCallback           = null;
+var proximiioReadyCallback  = null;
+var beaconFoundCallback     = null;
+var beaconLostCallback      = null;
 
 module.exports = {
-    setIDandAuthToken: function (id, authToken, successCallback, errorCallback) {
-        cordova.exec(successCallback, errorCallback, "ProximiioCordova", "setIDandAuthToken", [id, authToken]);
+    setToken: function (authToken, successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "ProximiioCordova", "setToken", [authToken]);
     },
 
     setDebugOutput: function(enableDebug, successCallback, errorCallback)
@@ -27,34 +31,61 @@ module.exports = {
     {
         positionChangeCallback = callback;
     },
+    setFloorChangedCallback: function(callback)
+    {
+        floorChangedCallback = callback;
+    },
     setErrorCallback: function(callback)
     {
         errorCallback = callback;
     },
-
-    displayPushOutputMessage: function(pushOutput, successCallback, errorCallback)
-    {
+    setProximiioReadyCallback: function(callback) {
+        proximiioReadyCallback = callback;
+    },
+    setBeaconFoundCallback: function(callback) {
+        beaconFoundCallback = callback;
+    },
+    setBeaconLostCallback: function(callback) {
+        beaconLostCallback = callback;
+    },
+    displayPushOutputMessage: function(pushOutput, successCallback, errorCallback) {
         cordova.exec(successCallback, errorCallback, "ProximiioCordova", "showPushMessage", [pushOutput.id]);
     },
 
-	  setRunOnBackground: function(run, successCallback, errorCallback)
-    {
+    setRunOnBackground: function(run, successCallback, errorCallback) {
         cordova.exec(successCallback, errorCallback, "ProximiioCordova", "setRunOnBackground", [run]);
     },
 
     /* Called by native side */
-    triggeredInput: function(entered, input) {
-        var inputObj = eval(input);
-        inputTriggerCallback(inputObj, entered);
+    triggeredInput: function(enter, geofence) {
+        var inputObj = eval(geofence);
+        inputTriggerCallback(enter, geofence);
     },
-    triggeredOutput: function(output, input) {
-        var inputObj = eval(input);
+    triggeredOutput: function(output) {
+        console.log('should updateOutput:', output);
         var outputObj = eval(output);
-        outputTriggerCallback(outputObj, inputObj);
+        outputTriggerCallback(outputObj);
     },
     updatedPosition: function(coords) {
+        console.log('should updatePosition:', coords);
         var coordsObj = eval(coords);
-        positionChangeCallback(coordsObj);
+        positionChangeCallback(coords);
+    },
+    changedFloor: function(floor) {
+        console.log('should change floor:', floor);
+        var floorObj = eval(floor); 
+        floorChangedCallback(floorObj);
+    },
+    proximiioReady: function(visitorId) {
+        proximiioReadyCallback(visitorId);
+    },
+    foundBeacon: function(beacon) {
+        var beaconObj = eval(beacon);
+        beaconFoundCallback(beaconObj);
+    },
+    lostBeacon: function(beacon) {
+        var beaconObj = eval(beacon);
+        beaconLostCallback(beaconObj);
     },
     encounteredError: function(code, id, str) {
         var errorObj = {};
